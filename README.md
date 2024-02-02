@@ -11,7 +11,7 @@ A JavaScript library used to extract, edit or remove metadata in Microsoft Offic
  * ods, odt, odp
 
 ## Install:
-Officeprops relies on [JSZip](https://stuk.github.io/jszip/) which has be included alongside this package if not using node.
+Officeprops relies on [JSZip](https://stuk.github.io/jszip/) which has to be included alongside this package if not using node.
 
 Node:
 ```
