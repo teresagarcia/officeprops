@@ -11,15 +11,13 @@
     if (typeof module !== "undefined" && module.exports) {
       exports = module.exports = OFFICEPROPS;
       JSZip = require("jszip");
-      DOMParser = require("xmldom").DOMParser;
-      XMLSerializer = require("xmldom").XMLSerializer;
     }
     exports.OFFICEPROPS = OFFICEPROPS;
   } else {
     root.OFFICEPROPS = OFFICEPROPS;
   }
 
-  var typeConverters = (OFFICEPROPS.typeConverters = {
+  const typeConverters = (OFFICEPROPS.typeConverters = {
     str: e => e,
     int: e => e,
     float: e => e,
@@ -50,7 +48,7 @@
   });
 
   //https://msdn.microsoft.com/en-us/library/documentformat.openxml.extendedproperties(v=office.14).aspx
-  var properties = (OFFICEPROPS.properties = {
+  const properties = (OFFICEPROPS.properties = {
     "cp:category": { name: "category", type: "str" },
     Manager: { name: "manager", type: "str" },
     "cp:contentStatus": { name: "contentStatus", type: "str" },
@@ -169,16 +167,16 @@
   }
 
   function getFormat(zip) {
-    if (zip.files.hasOwnProperty("docProps/core.xml") && zip.files.hasOwnProperty("docProps/app.xml")) {
+    if ("docProps/core.xml" in zip.files && "docProps/app.xml" in zip.files) {
       return "office";
-    } else if (zip.files.hasOwnProperty("meta.xml")) {
+    } else if ("meta.xml" in zip.files) {
       return "openoffice";
     }
     return false;
   }
 
   function translateMetadata(textObjects, names) {
-    var headingPairsAndParts = [];
+    const headingPairsAndParts = [];
     textObjects.forEach((e, i, a) => {
       if (e.path == "HeadingPairs/vt:vector/vt:variant/vt:lpstr") {
         headingPairsAndParts.push({
@@ -188,7 +186,7 @@
         });
       }
       if (e.path == "TitlesOfParts/vt:vector/vt:lpstr") {
-        for (var i = 0; i < headingPairsAndParts.length; i++) {
+        for (let i = 0; i < headingPairsAndParts.length; i++) {
           if (headingPairsAndParts[i]["value"].length < headingPairsAndParts[i]["length"]) {
             headingPairsAndParts[i]["value"].push(e.value);
             break;
@@ -218,10 +216,10 @@
       }
     };
 
-    var editable = {};
+    let editable = {};
     textObjects.forEach(e => {
       if (names.hasOwnProperty(e["path"])) {
-        translatedValue = typeConverters[names[e["path"]].type](e.value);
+        let translatedValue = typeConverters[names[e["path"]].type](e.value);
         createPropertyOrArray(editable, names[e["path"]].name, {
           value: e.value,
           tvalue: translatedValue,
@@ -232,7 +230,7 @@
       }
     });
 
-    var readonly = {};
+    let readonly = {};
     headingPairsAndParts.forEach(e => {
       readonly[e.name] = { value: e.value, tvalue: e.value };
     });
@@ -290,7 +288,7 @@
             object.value;
         }
       } else {
-        var nodes = xml.getElementsByTagName(object.xmlPath.split("/").slice(-1));
+        let nodes = xml.getElementsByTagName(object.xmlPath.split("/").slice(-1));
         if (nodes.length > 0 && object.xmlPath != "") {
           for (var i = 0; i < nodes.length; i++) {
             var valueToInsert =
@@ -349,7 +347,7 @@
   }
 
   OFFICEPROPS.editData = async function(officeFile, metadata) {
-    var newMetaFiles = await getModifiedMetadataAsXml(officeFile, metadata);
+    const newMetaFiles = await getModifiedMetadataAsXml(officeFile, metadata);
     return loadFile(officeFile)
       .then(function(zip) {
         if (zip.OPformat === "office") {
