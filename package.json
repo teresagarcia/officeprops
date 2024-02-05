@@ -1,6 +1,6 @@
 {
   "name": "officeprops2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manipulate MS office and Open Office metadata",
   "keywords": [
     "metadata",
@@ -14,7 +14,7 @@
   },
   "author": "Torkel Velure",
   "contributors": ["Teresa García"],
-  "main": "src/officeprops.js",
+  "main": "./lib/officeprops",
   "license": "MIT",
   "dependencies": {
     "jszip": "3.10.1"
