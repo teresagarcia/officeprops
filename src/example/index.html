@@ -39,7 +39,7 @@ and open the template in the editor.
         
         function removeData(){
             var file = document.getElementById("file").files[0];
-            OFFICEPROPS.removeMetaData(file).then(function(zip){
+            OFFICEPROPS.removeData(file).then(function(zip){
                 downloadFile(zip,file.name);
             });
         }

@@ -1,7 +1,7 @@
 (function() {
-  var root = this;
-
-  var OFFICEPROPS = function(obj) {
+  const root = this;
+  
+  const OFFICEPROPS = function(obj) {
     if (obj instanceof OFFICEPROPS) return obj;
     if (!(this instanceof OFFICEPROPS)) return new OFFICEPROPS(obj);
     this.OFFICEPROPSwrapped = obj;
@@ -110,7 +110,7 @@
     "office:meta/meta:generator": { name: "application", type: "str" }
   });
 
-  var mimeTypes = (OFFICEPROPS.mimeTypes = {
+  const mimeTypes = (OFFICEPROPS.mimeTypes = {
     //https://stackoverflow.com/questions/4212861/what-is-a-correct-mime-type-for-docx-pptx-etc
     docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     dotx: "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
@@ -149,14 +149,14 @@
       .file(fileName)
       .async("text")
       .then(function(text) {
-        var xmlDoc = new DOMParser().parseFromString(text, "text/xml");
+        const xmlDoc = new DOMParser().parseFromString(text, "text/xml");
         return xmlDoc;
       });
   }
 
   async function loadFile(officeFile) {
     return await JSZip.loadAsync(officeFile).then(zip => {
-      var format = getFormat(zip);
+      const format = getFormat(zip);
       if (format) {
         zip.OPformat = format;
         return zip;
@@ -202,7 +202,7 @@
         e.path != "HeadingPairs/vt:vector/vt:variant/vt:i4"
     );
 
-    var createPropertyOrArray = (object, property, val) => {
+    const createPropertyOrArray = (object, property, val) => {
       if (object.hasOwnProperty(property)) {
         if (object[property].value instanceof Array) {
           object[property].value.push(val.value);
@@ -252,12 +252,12 @@
     }
     Array.from(nodes).forEach(function(e) {
       if (e.childNodes.length == 1 && e.firstChild.nodeType === 3) {
-        var metaObject = { path: (name + "/" + e.nodeName).slice(1), value: e.firstChild.textContent };
+        const metaObject = { path: (name + "/" + e.nodeName).slice(1), value: e.firstChild.textContent };
         metaObjects.push(metaObject);
       } else if (e.childNodes.length > 0) {
         metaObjects = getTextFromNodelist(e.childNodes, name + "/" + e.nodeName, metaObjects);
       } else {
-        var metaObject = { path: (name + "/" + e.nodeName).slice(1), value: "" };
+        const metaObject = { path: (name + "/" + e.nodeName).slice(1), value: "" };
         if (
           metaObject.path == "office:meta/meta:document-statistic" ||
           metaObject.path === "office:meta/meta:template"
@@ -275,10 +275,10 @@
 
   function editXML(xml, metadata) {
     for (key in metadata.editable) {
-      var object = metadata.editable[key];
+      const object = metadata.editable[key];
       if (object.xmlPath.includes("/@")) {
-        var nodes = xml.getElementsByTagName(object.xmlPath.split("/").slice(-2, -1));
-        for (var i = 0; i < nodes.length; i++) {
+        const nodes = xml.getElementsByTagName(object.xmlPath.split("/").slice(-2, -1));
+        for (let i = 0; i < nodes.length; i++) {
           nodes[i].getAttributeNode(
             object.xmlPath
               .split("/")
@@ -290,8 +290,8 @@
       } else {
         let nodes = xml.getElementsByTagName(object.xmlPath.split("/").slice(-1));
         if (nodes.length > 0 && object.xmlPath != "") {
-          for (var i = 0; i < nodes.length; i++) {
-            var valueToInsert =
+          for (let i = 0; i < nodes.length; i++) {
+            const valueToInsert =
               object.value instanceof Array
                 ? object.value[i < object.value.length ? i : object.value.length - 1]
                 : object.value;
@@ -372,16 +372,16 @@
         if (zip.OPformat === "office") {
           zip.remove("docProps/core.xml");
           zip.remove("docProps/app.xml");
-          if (zip.files.hasOwnProperty("docProps/custom.xml")) {
+          if ("docProps/custom.xml" in zip.files) {
             zip.remove("docProps/custom.xml");
           }
-          var appXML ='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"></Properties>';
-          var coreXML ='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></cp:coreProperties>';
+          const appXML ='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"></Properties>';
+          const coreXML ='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></cp:coreProperties>';
           zip.file("docProps/core.xml", coreXML);
           zip.file("docProps/app.xml", appXML);
         } else if (zip.OPformat === "openoffice") {
           zip.remove("meta.xml");
-          var metaXML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" office:version="1.1"></office:document-meta>';
+          const metaXML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" office:version="1.1"></office:document-meta>';
           zip.file("meta.xml", metaXML);
         } else {
             throw new Error("File not valid")

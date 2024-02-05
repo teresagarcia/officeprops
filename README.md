@@ -1,6 +1,6 @@
 # OfficeProps.js
 
-A JavaScript library used to extract, edit or remove metadata in Microsoft Office and Open Office files.
+Updated fork of OfficeProps.js -  A JavaScript library used to extract, edit or remove metadata in Microsoft Office and Open Office files.
 
 
 
@@ -19,8 +19,8 @@ npm install officeprops
 ```
 Or include via cdn:
 ```
-<script src='https://cdn.jsdelivr.net/npm/jszip@3.1.5/dist/jszip.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/officeprops@1.1.5/src/officeprops.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/officeprops2@1.0.0/src/officeprops.js'></script>
 ```
 
 
@@ -85,5 +85,5 @@ OFFICEPROPS.removeData(file).then(function(officeFile){
 })
 ```
 
-For more, see [Examples](https://github.com/TorkelV/officeprops/blob/master/src/example/index.html) or [Tests](https://github.com/TorkelV/officeprops/blob/master/src/test/officeprops.test.js)
+For more, see [Examples](https://github.com/teresagarcia/officeprops2/blob/master/src/example/index.html) or [Tests](https://github.comteresagarcia/officeprops2/blob/master/src/test/officeprops.test.js)
 
